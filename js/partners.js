@@ -1,0 +1,3 @@
+fetch('./db/partners.json')
+
+
