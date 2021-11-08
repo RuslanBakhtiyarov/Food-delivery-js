@@ -1,9 +1,11 @@
-const cardsRestaurants = document.querySelector('.cards-restaurants')
+const partners = () => {
+    const cardsRestaurants = document.querySelector('.cards-restaurants')
 
 console.dir(cardsRestaurants);
 
 const renderItems = (data) => {
-    data.forEach(({image,kitchen,name,price,products,stars,time_of_delivery } ) => {
+    data.forEach((item) => {
+        const{image,kitchen,name,price,products,stars,time_of_delivery } = item
         const a = document.createElement('a')
 
         a.setAttribute('href', '/restaurant.html')
@@ -28,9 +30,16 @@ const renderItems = (data) => {
                             </div>
                         </div>
         `
-        
-       cardsRestaurants.append(a)
-    });
+        a.addEventListener('click', (e) => {
+            e.preventDefault()
+
+            localStorage.setItem('restaurant', JSON.stringify(item))
+            
+            window.location.href = '/restaurant.html'
+        } )
+
+        cardsRestaurants.append(a)
+    })
 }
 
 
@@ -44,3 +53,6 @@ fetch('https://test-b0718-default-rtdb.firebaseio.com/db/partners.json')
 })
 
 
+
+}
+partners()

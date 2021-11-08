@@ -1,23 +1,49 @@
-const restaurant = 'tanuki'
-const cardsMenu = document.querySelector('.cards-menu')
+const menu = () => {
+	
+	const cardsMenu = document.querySelector('.cards-menu')
+
+	const cartArrey = localStorage.getItem('cart') ?
+		JSON.parse(localStorage.getItem('cart')) :
+		[]
+
+const changeTitle = (restaurant) => {
+	const restaurantTitle = document.querySelector('.restaurant-title')
+
+	restaurantTitle.textContent = restaurant.name
+}
+	
+	const addToCard = (cardItem) => {
+		if (cartArrey.some((item) => item.id === cardItem.id)){
+			cartArrey.map((item => {
+				if (item.id === cardItem.id) {
+					item.count++
+				}
 
 
+				return item
+			}))
+		} else {
+			cartArrey.push(cardItem)
+		}
+		
+
+		localStorage.setItem('cart',JSON.stringify(cartArrey))
+	}
 
 const renderItems = (data) => {
-    data.forEach(item => {
-        const card = document.createElement('div')
-console.log(item);
-        card.classList.add('card')
+	data.forEach(({description,id,image,name,price})=> {
+		const card = document.createElement('div')
 
-        card.innerHTML = `
-        <img src="img/pizza-plus/pizza-vesuvius.jpg" alt="image" class="card-image" />
+		card.classList.add('card')
+
+		card.innerHTML = `
+		<img src="${image}" alt="${name}" class="card-image" />
 						<div class="card-text">
 							<div class="card-heading">
-								<h3 class="card-title card-title-reg">Пицца Везувий</h3>
+								<h3 class="card-title card-title-reg">${name}</h3>
 							</div>
 							<div class="card-info">
-								<div class="ingredients">Соус томатный, сыр «Моцарелла», ветчина, пепперони, перец
-									«Халапенье», соус «Тобаско», томаты.
+								<div class="ingredients">${description}
 								</div>
 							</div>
 							<div class="card-buttons">
@@ -25,20 +51,36 @@ console.log(item);
 									<span class="button-card-text">В корзину</span>
 									<span class="button-cart-svg"></span>
 								</button>
-								<strong class="card-price-bold">545 ₽</strong>
+								<strong class="card-price-bold">${price}₽</strong>
 							</div>
 						</div>
-                        `
-       
-    });
+		`
+		card.querySelector('.button-card-text').addEventListener('click',() => {
+			addToCard({name,price,id,count: 1})
+		})
+
+
+		cardsMenu.append(card) 
+	})
 }
+if (localStorage.getItem('restaurant')) {
+	const restaurant = JSON.parse(localStorage.getItem('restaurant'))
+	
+	changeTitle(restaurant)
 
-
-fetch(`./db/partners.json`)
-.then((response) => response.json())
+	fetch(`./db/${restaurant.products}`)
+    .then((response) => response.json())
     .then((data) => {
     renderItems(data)
     })
-.catch ((error) => {
+    .catch ((error) => {
     console.log(error);
-})
+    })
+} else {
+	window.location.href = '/' 
+}
+
+
+
+}
+menu()
