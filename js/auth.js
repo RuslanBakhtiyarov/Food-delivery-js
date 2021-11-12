@@ -1,5 +1,5 @@
 const auth = () => {
-    const buttonAuth = document.querySelector('.button-auth')
+const buttonAuth = document.querySelector('.button-auth')
 const modalAuth = document.querySelector('.modal-auth')
 const closeAuth = document.querySelector('.close-auth')
 const buttonOut = document.querySelector('.button-out')
